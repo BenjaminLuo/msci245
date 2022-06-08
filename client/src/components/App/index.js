@@ -1,111 +1,174 @@
-
-// -------------------------------------------------------- Sample append to DOM
-
-import * as React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-)
-
-
-
-import { listen } from 'express/lib/application';
 import * as React from 'react';
 
-const textbooks = [
-  {
-    "title": "Road to React",
-    "author": "a1",
-    "year": "y1",
-    "url": "u1"
- },
- {
-    "title": "t2",
-    "author": "a2",
-    "year": "y2",
-    "url": "u2"
-  }
-]
+const App = () => {
 
-function getTitle(title) {
+  const initialRecipes = [
+    {
+      title: 'Fruit salad',
+      difficulty: '2',
+      ingredients: ['apple', 'banana', 'blueberries', 'raisins', 'walnuts'],
+      calories: "200",
+      instructions: "Wash fresh fruit. Slice fruit into pieces. Mix all ingredients in a bowl.",
+      recipeID: 1
+    }, {
+      title: 'Avocado wrap',
+      difficulty: '3',
+      ingredients: ['avocado', 'spinach', 'pine nuts', 'mayo', 'apple', 'tortilla bread'],
+      calories: "400",
+      instructions: "Wash all fruits and vegetables. Slice avocados and apples. Mix all ingredients and wrap them in a tortilla bread.",
+      recipeID: 2
+    },
+  ];
 
-  let index;
 
-  if (title === 'React') {
-    index = 0;
+  const [recipes, setRecipes] = React.useState(initialRecipes);
+  const [ingredientSearchTerm, setIngredientSearchTerm] = React.useState('');
+  const [difficultyLevel, setDifficultyLevel] = React.useState('');
+
+
+  const handleRemoveRecipe = (item) => {
+
+    // delete item["ingredients"];
+
+    const newRecipes = recipes.filter(
+      (recipe) => item.ingredients !== recipe.ingredients);
+    
+    setRecipes(newRecipes);
   };
 
-  return textbooks[index]['title'];
-}
+  React.useEffect(() => {
+    console.log("recipes " + recipes[0].title);
+  }, []);
 
-function App() {
+
+
+  const handleIngredientSearch = (event) => {
+    setIngredientSearchTerm(event.target.value);
+  };
+
+  const handleDifficultyLevelSearch = (event) => {
+    setDifficultyLevel(event.target.value);
+  };
+
+  const foundRecipesByIngredients = recipes.filter(function (recipe) {
+    if (ingredientSearchTerm) {
+      return recipe.ingredients.includes(ingredientSearchTerm);
+    } else {
+      return recipe;
+    }
+  });
+
+  const foundRecipesByDifficulty = foundRecipesByIngredients.filter(function (recipe) {
+    if (difficultyLevel) {
+      return recipe.difficulty <= difficultyLevel;
+    } else {
+      return recipe;
+    }
+  });
+
 
   return (
     <div>
       <h1>
-      {getTitle('React')}
+        Recipe finder
       </h1>
+      
+
+      <Search
+        label="Search by ingredient: "
+        onSearch={handleIngredientSearch}
+      />
+
+      <Search
+        label="Search by max difficulty level: "
+        onSearch={handleDifficultyLevelSearch}
+      />
+
+      <p>
+        Containing ingredient: <strong>{ingredientSearchTerm}</strong>.
+      </p>
+
+      <p>
+        Max difficulty level: <strong>{ingredientSearchTerm}</strong>.
+      </p>
+
       <hr />
-      <ul>
-        {
-          textbooks.map( function(item) {
-            return <li>{item.title}</li>
-          })
-        }
-      </ul>
+
+
+      <List
+        list={recipes}
+        onRemoveItem={handleRemoveRecipe}
+      />
+  
+
     </div>
   );
 }
 
-//       <label htmlFor="search">Search: </label>
-//       <input id="search" type="text" />
+const Search = (props) => (
+  <div>
+    <label htmlFor="search">{props.label}</label>
+    <input
+      id="search"
+      type="text"
+      onChange={props.onSearch}
+    />
+
+  </div>
+);
+
+
+
+const List = ({ list, onRemoveItem }) => {
+  return (
+    <ul>
+      {list.map((item) => {
+        return (
+          <Item
+            item={item}
+            onRemoveItem={onRemoveItem}
+          />
+        );
+      })}
+    </ul>
+
+  )
+}
+
+
+const Item = ({ item, onRemoveItem }) => {
+  const handleRemoveItem = () => {
+    onRemoveItem(item);
+    // return (
+    //   <div>
+    //     <p>
+    //       <button type="button">
+    //         Reveal
+    //       </button>
+    //     </p>
+    //   </div>
+    // )
+  };
+
+  return (
+    <li>
+      <p> {"Title: " + item.title}</p>
+      <p> {"Difficulty: " + item.difficulty}</p>
+      <p>Ingredients: </p>
+      <ul>
+        {item.ingredients.map((ingredient) => (<li>{ingredient}</li>))}
+      </ul>
+      <p>{"Instructions: " + item.instructions}</p>
+      <p>{"Calories: " + item.calories}</p>
+      <p>
+        <button type="button" onClick={handleRemoveItem}>
+          Dismiss
+        </button>
+      </p>
+    </li>
+  )
+}
+
+
 
 export default App;
-
-
-// import React, { Component } from 'react';
-// import {
-//   BrowserRouter as Router,
-//   Route,
-//   Link,
-// } from 'react-router-dom';
-
-// import Home from '../Home';
-// import PrivateRoute from '../Navigation/PrivateRoute.js';
-
-
-
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       //
-//     };
-//   }
-
-//   componentDidMount() {
-//     //
-//   }
-
-
-//   componentWillUnmount() {
-//     this.listener();
-//   }
-
-
-//   render() {
-//     return (
-// 	  <Router>
-// 	    <div>
-//         <PrivateRoute exact path="/" component={Home}/>
-// 	    </div>
-// 	  </Router>
-//     );
-//   }
-// }
-
-// export default App;

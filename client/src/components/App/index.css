@@ -1,0 +1,19 @@
+body {
+    background: rgb(169,191,204);
+    background: linear-gradient(90deg, rgba(169,191,204,0.9948354341736695) 0%, rgba(9,117,121,0.8687850140056023) 33%, rgba(190,184,235,0.09287464985994398) 100%);
+    margin-left: 10%;
+    margin-top: 5%;
+    color: lightgrey;
+}
+
+.container {
+    color: rgba(0, 0, 0, 0.747);
+    background: white;
+    width: 60% !important;
+    margin-top: 2.5%;
+    padding: 30px;
+}
+
+.row {
+    padding-left: 100px;
+}
