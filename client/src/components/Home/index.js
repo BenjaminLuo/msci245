@@ -140,7 +140,7 @@ class Home extends Component {
             {this.state.mode === 0 ? (
               <React.Fragment>
                 T2
-              </React.Fragment>
+              </React.Fragment> 
             ) : (
               <React.Fragment>
                 Welcome back!
