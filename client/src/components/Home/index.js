@@ -1,3 +1,10 @@
+// Desc:    MSCI 245 - Project Deliverable 1
+// Author:  Benjamin Luo
+// Date:    2022-06-17
+
+// ------------------------------------------------------------------------------------- /\ 
+// ------------------------------------------------------------------------------------- \/ 
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -9,14 +16,11 @@ import Paper from "@material-ui/core/Paper";
 
 
 //Dev mode
-// const serverURL = ""; //enable for dev mode
+const serverURL = ""; //enable for dev mode
 
 //Deployment mode instructions
-const serverURL = "http://ov-research-4.uwaterloo.ca:3064"; //enable for deployed mode; Change PORT to the port number given to you;
-//To find your port number: 
-//ssh to ov-research-4.uwaterloo.ca and run the following command: 
-//env | grep "PORT"
-//copy the number only and paste it in the serverURL in place of PORT, e.g.: const serverURL = "http://ov-research-4.uwaterloo.ca:3000";
+// Switch to port 3064
+// const serverURL = "http://ov-research-4.uwaterloo.ca:3123"; //enable for deployed mode; Change PORT to the port number given to you;
 
 const fetch = require("node-fetch");
 
