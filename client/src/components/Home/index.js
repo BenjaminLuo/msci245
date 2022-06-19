@@ -2,175 +2,95 @@
 // Author:  Benjamin Luo
 // Date:    2022-06-17
 
-// ------------------------------------------------------------------------------------- /\ 
-// ------------------------------------------------------------------------------------- \/ 
+/* ------------------------------------ \/ References
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
+- https://www.youtube.com/watch?v=Lv3OhfcxjkA: React, Material UI "Contact us" Form
+- https://www.youtube.com/watch?v=tKApfSoDPgM: Using Material UI "Select" element
 
+--------------------------------------- /\ References */
 
-//Dev mode
+import React from 'react';
+import { Typography, Card, CardContent, Grid, TextField, Button, Box, MenuItem } from '@material-ui/core';
+
 const serverURL = ""; //enable for dev mode
 
-//Deployment mode instructions
-// Switch to port 3064
-// const serverURL = "http://ov-research-4.uwaterloo.ca:3123"; //enable for deployed mode; Change PORT to the port number given to you;
-
-const fetch = require("node-fetch");
-
-const opacityValue = 0.9;
-
-const theme = createTheme({
-  palette: {
-    type: 'dark',
-    background: {
-      default: "#000000"
-    },
-    primary: {
-      main: "#52f1ff",
-    },
-    secondary: {
-      main: "#b552f7",
-    },
-  },
-});
-
-const styles = theme => ({
-  root: {
-    body: {
-      backgroundColor: "#000000",
-      opacity: opacityValue,
-      overflow: "hidden",
-    },
-  },
-  mainMessage: {
-    opacity: opacityValue,
-  },
-
-  mainMessageContainer: {
-    marginTop: "20vh",
-    marginLeft: theme.spacing(20),
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: theme.spacing(4),
-    },
-  },
-  paper: {
-    overflow: "hidden",
-  },
-  message: {
-    opacity: opacityValue,
-    maxWidth: 250,
-    paddingBottom: theme.spacing(2),
-  },
-
-});
-
-
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userID: 1,
-      mode: 0
-    }
+const MuiSelect = () => {
+  const [movie, setMovie] = React.useState('')
+  const handleChange = (event) => {
+    setMovie(event.target.value);
   };
 
-  componentDidMount() {
-    //this.loadUserSettings();
-  }
-
-
-  loadUserSettings() {
-    this.callApiLoadUserSettings()
-      .then(res => {
-        //console.log("loadUserSettings returned: ", res)
-        var parsed = JSON.parse(res.express);
-        console.log("loadUserSettings parsed: ", parsed[0].mode)
-        this.setState({ mode: parsed[0].mode });
-      });
-  }
-
-  callApiLoadUserSettings = async () => {
-    const url = serverURL + "/api/loadUserSettings";
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //authorization: `Bearer ${this.state.token}`
-      },
-      body: JSON.stringify({
-        userID: this.state.userID
-      })
-    });
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    console.log("User settings: ", body);
-    return body;
-  }
-
-  render() {
-    const { classes } = this.props;
-
-
-
-    const mainMessage = (
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        justify="flex-start"
-        alignItems="flex-start"
-        style={{ minHeight: '100vh' }}
-        className={classes.mainMessageContainer}
+  return (
+    <Box>
+      <TextField
+        label="Select movie"
+        select
+        value={movie}
+        onChange={handleChange}
+        fullWidth
+        variant="outlined"
       >
-        <Grid item>
 
-          <Typography
-            variant={"h3"}
-            className={classes.mainMessage}
-            align="flex-start"
-          >
-            {this.state.mode === 0 ? (
-              <React.Fragment>
-                T2
-              </React.Fragment> 
-            ) : (
-              <React.Fragment>
-                Welcome back!
-              </React.Fragment>
-            )}
-          </Typography>
+        <MenuItem value="M1">Movie 1</MenuItem>
+        <MenuItem value="M2">Movie 2</MenuItem>
+        <MenuItem value="M3">Movie 3</MenuItem>
+        <MenuItem value="M4">Movie 4</MenuItem>
+        <MenuItem value="M5">Movie 5</MenuItem>
 
-        </Grid>
-      </Grid>
-    )
-
-
-    return (
-      <MuiThemeProvider theme={theme}>
-        <div className={classes.root}>
-          <CssBaseline />
-          <Paper
-            className={classes.paper}
-          >
-            {mainMessage}
-          </Paper>
-
-        </div>
-      </MuiThemeProvider>
-    );
-  }
+      </TextField>
+    </Box>
+  )
 }
 
-Home.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+function App() {
 
-export default withStyles(styles)(Home);
+  return (
+    <div className="App">
+      <Typography gutterBottom variant="h3" align="center">
+        Review a movie
+      </Typography>
+
+      <Card style={{ maxWidth: 450, margin: "0 auto", padding: "20px 5px" }}>
+        <CardContent>
+
+          <Typography gutterBottom variant="h5">
+            Placeholder
+          </Typography>
+
+          <form>
+            <Grid container spacing={1}>
+
+              <Grid xs={12} item>
+                <MuiSelect />
+              </Grid>
+
+              <Grid xs={12} sm={6} item>
+                <TextField label="First Name" placeholder="Enter first name" variant="outlined" fullWidth required />
+              </Grid>
+              <Grid xs={12} sm={6} item>
+                <TextField label="Last Name" placeholder="Enter last name" variant="outlined" fullWidth required />
+              </Grid>
+              <Grid xs={12} item>
+                <TextField type="email" label="Email" placeholder="Enter email" variant="outlined" fullWidth required />
+              </Grid>
+              <Grid xs={12} item>
+                <TextField type="number" label="Phone Number" placeholder="Enter phone number" variant="outlined" fullWidth required />
+              </Grid>
+              <Grid xs={12} item>
+                <TextField label="Message" multiline rows={4} placeholder="Type your message here" variant="outlined" fullWidth required />
+              </Grid>
+              <Grid xs={12} item>
+                <Button type="submit" variant="contained" color="primary" fullWidth>Submit</Button>
+              </Grid>
+
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+
+    </div>
+  );
+
+}
+
+export default App;
