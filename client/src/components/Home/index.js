@@ -12,7 +12,6 @@
 // --------------------------------------------------- \/ Imports
 
 import React from 'react';
-import StarIcon from '@mui/icons-material/Star';
 import {
   Typography,
   Card,
@@ -54,6 +53,7 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  border: '0px'
 };
 
 // --------------------------------------------------- /\ Styles
@@ -204,12 +204,32 @@ const ReviewRating = () => {
 
 function Review() {
 
+  // Modal triggers
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // Form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleOpen();
+
+    // Validation
+    if (reviewObject.body == "" || reviewObject.rating == "" || reviewObject.movie == "" || reviewObject.title == "") {
+      if (reviewObject.body == "") {
+        
+      } 
+      if (reviewObject.rating == "") {
+  
+      } 
+      if (reviewObject.movie == "") {
+  
+      } 
+      if (reviewObject.title == "") {
+  
+      }
+    } else {
+      handleOpen(); // Open modal to display review
+    }
   }
 
   return (
@@ -261,7 +281,7 @@ function Review() {
               >
                 <Box sx={style}>
                   <Typography id="modal-modal-title" variant="h6" component="h2" style={{ marginBottom: "20px" }}>
-                    {reviewObject.title} ~ {reviewObject.rating} <StarIcon></StarIcon>
+                    {reviewObject.title} ~ {reviewObject.rating}*
                   </Typography>
                   <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                     {reviewObject.body}
