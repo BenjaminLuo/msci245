@@ -68,7 +68,7 @@ function Review(props) {
   const [movie, selectedMovie] = React.useState();
   const [title, enteredTitle] = React.useState();
   const [review, enteredReview] = React.useState();
-  const [rating, selectedRating] = React.useState("");
+  const [rating, selectedRating] = React.useState();
 
   // States: Errors
   // const [errorMovie, triggerErrorMovie] = React.useState(false);
@@ -87,11 +87,11 @@ function Review(props) {
 
     // Validation
     reviewObject.title === "" ? triggerErrorTitle(true) : triggerErrorTitle(false)
-    // if (reviewObject.rating === "") selectedRating('')
     reviewObject.body === "" ? triggerErrorReview(true) : triggerErrorReview(false)
+    reviewObject.rating === "" ? triggerErrorRating(true) : triggerErrorRating(false)
 
     // If no errors then output user review
-    if (reviewObject.body != "" || reviewObject.rating != "" || reviewObject.movie != "" || reviewObject.title != "") {
+    if (reviewObject.body != "" && reviewObject.rating != "" && reviewObject.movie != "" && reviewObject.title != "") {
       handleOpen(); // Open modal to display review
     }
   }
@@ -133,6 +133,8 @@ function Review(props) {
                 <ReviewRating
                   rating={rating}
                   onChange={selectedRating}
+                  error={errorRating}
+                  helperText={errorRating ? 'Please select the rating' : " "}
                 />
               </Grid>
 
@@ -272,14 +274,7 @@ const ReviewRating = (props) => {
 
   const handleChange = (event) => {
     reviewObject.rating = event.target.value;
-    // setHelperText(' ');
-    // // setHelperText('Please select the rating')
-    // setError(false);
   };
-
-  // const [error, setError] = React.useState(false);
-  // const [helperText, setHelperText] = React.useState();
-  // setHelperText('Please select the rating')
 
   return (
     <FormControl component="fieldset" error={props.error}>
