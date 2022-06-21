@@ -26,9 +26,11 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
+  FormHelperText,
   Modal
 } from '@material-ui/core';
 
+// const serverURL = "http://ov-research-4.uwaterloo.ca:3064";
 const serverURL = ""; //enable for dev mode
 
 const reviewObject = {
@@ -57,152 +59,22 @@ const style = {
 };
 
 // --------------------------------------------------- /\ Styles
-// --------------------------------------------------- \/ Movie Selection
-// Component: Selecting which movie to review (MUI Select)
-
-const MovieSelection = () => {
-  const [movie, selectedMovie] = React.useState('')
-  const handleChange = (event) => {
-    selectedMovie(event.target.value);
-    reviewObject.movie = event.target.value;
-  };
-
-  return (
-    <Box>
-      <TextField
-        label="Select movie"
-        select
-        value={movie}
-        onChange={handleChange}
-        fullWidth
-        variant="outlined"
-      >
-
-        <MenuItem value="M1">Movie 1</MenuItem>
-        <MenuItem value="M2">Movie 2</MenuItem>
-        <MenuItem value="M3">Movie 3</MenuItem>
-        <MenuItem value="M4">Movie 4</MenuItem>
-        <MenuItem value="M5">Movie 5</MenuItem>
-
-      </TextField>
-    </Box>
-  )
-}
-
-// --------------------------------------------------- /\ Movie Selection
-// --------------------------------------------------- \/ Review Title
-// Component: The title of the user's review (MUI TextField)
-
-const ReviewTitle = () => {
-  const [title, enteredTitle] = React.useState()
-  const handleChange = (event) => {
-    enteredTitle(event.target.value);
-    reviewObject.title = event.target.value;
-  };
-  return (
-    <TextField
-      label="Title"
-      placeholder="Enter review title"
-      variant="outlined"
-      value={title}
-      onChange={handleChange}
-      error={title === ""}
-      helperText={title === "" ? "Please enter your review title" : " "}
-      fullWidth
-    />
-  )
-}
-
-// --------------------------------------------------- /\ Review Title
-// --------------------------------------------------- \/ Review Body
-// Component: The body of the user's review (MUI TextField)
-
-const ReviewBody = () => {
-
-  const [review, enteredReview] = React.useState()
-  const handleChange = (event) => {
-    enteredReview(event.target.value);
-    reviewObject.body = event.target.value;
-  };
-
-  return (
-    <TextField
-      label="Review"
-      inputProps={{ maxLength: 200 }}
-      multiline rows={4}
-      placeholder="Type your thoughts here (max. 200 char)"
-      variant="outlined"
-      value={review}
-      onChange={handleChange}
-      fullWidth
-      error={review === ""}
-      helperText={review === "" ? "Please enter your review" : " "}
-    />
-  )
-}
-
-// --------------------------------------------------- /\ Review Body
-// --------------------------------------------------- \/ Review Rating
-// Component: The user's rating (# of stars) (MUI Radio Buttons)
-
-const ReviewRating = () => {
-
-  const [rating, selectedRating] = React.useState('')
-  const handleChange = (event) => {
-    selectedRating(event.target.value);
-    reviewObject.rating = event.target.value;
-  };
-
-  return (
-    <FormControl component="fieldset">
-      <FormLabel component="legend">Rating</FormLabel>
-      <RadioGroup
-        row
-        aria-label="position"
-        name="position"
-        value={rating}
-        onChange={handleChange}
-      >
-        <FormControlLabel
-          value="1"
-          control={<Radio color="primary" />}
-          label="1"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          value="2"
-          control={<Radio color="primary" />}
-          label="2"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          value="3"
-          control={<Radio color="primary" />}
-          label="3"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          value="4"
-          control={<Radio color="primary" />}
-          label="4"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          value="5"
-          control={<Radio color="primary" />}
-          label="5"
-          labelPlacement="bottom"
-        />
-      </RadioGroup>
-    </FormControl>
-  );
-}
-
-// --------------------------------------------------- /\ Review Rating
 // --------------------------------------------------- \/ Main Function
 // Main function: Aggregating components into a user form
 
-function Review() {
+function Review(props) {
+
+  // States
+  const [movie, selectedMovie] = React.useState();
+  const [title, enteredTitle] = React.useState();
+  const [review, enteredReview] = React.useState();
+  const [rating, selectedRating] = React.useState("");
+
+  // States: Errors
+  // const [errorMovie, triggerErrorMovie] = React.useState(false);
+  const [errorTitle, triggerErrorTitle] = React.useState(false);
+  const [errorReview, triggerErrorReview] = React.useState(false);
+  const [errorRating, triggerErrorRating] = React.useState(false);
 
   // Modal triggers
   const [open, setOpen] = React.useState(false);
@@ -214,20 +86,12 @@ function Review() {
     event.preventDefault();
 
     // Validation
-    if (reviewObject.body == "" || reviewObject.rating == "" || reviewObject.movie == "" || reviewObject.title == "") {
-      if (reviewObject.body == "") {
-        
-      } 
-      if (reviewObject.rating == "") {
-  
-      } 
-      if (reviewObject.movie == "") {
-  
-      } 
-      if (reviewObject.title == "") {
-  
-      }
-    } else {
+    reviewObject.title === "" ? triggerErrorTitle(true) : triggerErrorTitle(false)
+    // if (reviewObject.rating === "") selectedRating('')
+    reviewObject.body === "" ? triggerErrorReview(true) : triggerErrorReview(false)
+
+    // If no errors then output user review
+    if (reviewObject.body != "" || reviewObject.rating != "" || reviewObject.movie != "" || reviewObject.title != "") {
       handleOpen(); // Open modal to display review
     }
   }
@@ -251,18 +115,34 @@ function Review() {
             <Grid container spacing={2}>
 
               <Grid xs={12} item>
-                <MovieSelection />
+                <MovieSelection
+                  movie={movie}
+                  onChange={selectedMovie}
+                />
               </Grid>
               <Grid xs={12} item>
-                <ReviewTitle />
+                <ReviewTitle
+                  title={title}
+                  onChange={enteredTitle}
+                  error={errorTitle}
+                  helperText={errorTitle ? "Please enter your review title" : " "}
+                />
               </Grid>
 
               <Grid xs={12} item align="center">
-                <ReviewRating />
+                <ReviewRating
+                  rating={rating}
+                  onChange={selectedRating}
+                />
               </Grid>
 
               <Grid xs={12} item>
-                <ReviewBody />
+                <ReviewBody
+                  review={review}
+                  onChange={enteredReview}
+                  error={errorReview}
+                  helperText={errorReview ? "Please enter your review" : " "}
+                />
               </Grid>
               <Grid xs={12} item>
                 <Button
@@ -302,3 +182,149 @@ function Review() {
 export default Review;
 
 // --------------------------------------------------- /\ Main Function
+// --------------------------------------------------- \/ Movie Selection
+// Component: Selecting which movie to review (MUI Select)
+
+const MovieSelection = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.movie = event.target.value;
+  }
+
+  return (
+    <Box>
+      <TextField
+        label="Select movie"
+        select
+        value={props.movie}
+        fullWidth
+        variant="outlined"
+        onChange={handleChange}
+      >
+
+        <MenuItem value="M1">Movie 1</MenuItem>
+        <MenuItem value="M2">Movie 2</MenuItem>
+        <MenuItem value="M3">Movie 3</MenuItem>
+        <MenuItem value="M4">Movie 4</MenuItem>
+        <MenuItem value="M5">Movie 5</MenuItem>
+
+      </TextField>
+    </Box>
+  )
+}
+
+// --------------------------------------------------- /\ Movie Selection
+// --------------------------------------------------- \/ Review Title
+// Component: The title of the user's review (MUI TextField)
+
+const ReviewTitle = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.title = event.target.value;
+  }
+
+  return (
+    <TextField
+      label="Title"
+      placeholder="Enter review title"
+      variant="outlined"
+      value={props.title}
+      error={props.error}
+      helperText={props.helperText}
+      fullWidth
+      name={"reviewTitle"}
+      onChange={handleChange}
+    />
+  )
+}
+
+// --------------------------------------------------- /\ Review Title
+// --------------------------------------------------- \/ Review Body
+// Component: The body of the user's review (MUI TextField)
+
+const ReviewBody = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.body = event.target.value;
+  }
+
+  return (
+    <TextField
+      label="Review"
+      inputProps={{ maxLength: 200 }}
+      multiline rows={4}
+      placeholder="Type your thoughts here (max. 200 char)"
+      variant="outlined"
+      value={props.review}
+      fullWidth
+      error={props.error}
+      helperText={props.helperText}
+      onChange={handleChange}
+    />
+  )
+}
+
+// --------------------------------------------------- /\ Review Body
+// --------------------------------------------------- \/ Review Rating
+// Component: The user's rating (# of stars) (MUI Radio Buttons)
+
+const ReviewRating = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.rating = event.target.value;
+    // setHelperText(' ');
+    // // setHelperText('Please select the rating')
+    // setError(false);
+  };
+
+  // const [error, setError] = React.useState(false);
+  // const [helperText, setHelperText] = React.useState();
+  // setHelperText('Please select the rating')
+
+  return (
+    <FormControl component="fieldset" error={props.error}>
+      <FormLabel component="legend">Rating</FormLabel>
+      <RadioGroup
+        row
+        aria-label="position"
+        name="position"
+        value={props.rating}
+        onChange={handleChange}
+      >
+        <FormControlLabel
+          value="1"
+          control={<Radio color="primary" />}
+          label="1"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="2"
+          control={<Radio color="primary" />}
+          label="2"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="3"
+          control={<Radio color="primary" />}
+          label="3"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="4"
+          control={<Radio color="primary" />}
+          label="4"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="5"
+          control={<Radio color="primary" />}
+          label="5"
+          labelPlacement="bottom"
+        />
+      </RadioGroup>
+      <FormHelperText>{props.helperText}</FormHelperText>
+    </FormControl>
+  );
+}
+
+// --------------------------------------------------- /\ Review Rating
