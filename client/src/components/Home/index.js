@@ -1,200 +1,358 @@
-/*
+// Desc:    MSCI 245 - Project Deliverable 1
+// Author:  Benjamin Luo
+// Date:    2022-06-17
 
-MSci 245 - Test 1
+// --------------------------------------------------- \/ References
 
-********* This test contains 4 questions, listed below. ***********
+// - https://www.youtube.com/watch?v=Lv3OhfcxjkA: React, Material UI "Contact us" Form
+// - https://www.youtube.com/watch?v=tKApfSoDPgM: Using Material UI "Select" element
+// - https://thewebdev.info/2021/12/19/how-to-add-form-validation-with-react-and-material-ui/: Form validation
 
-Q1. Turn products list into a stateful list.
-- DONE: I refactored the initial list and wrote "const [products, changeProduct] = React.useState(initialList);"
+// --------------------------------------------------- /\ References
+// --------------------------------------------------- \/ Imports
 
-Q2. Create "inStock" stateful variable of type Boolean, and set it to true by default.
-- DONE: const [inStock, setStock] = React.useState(true);
+import React, { useEffect } from 'react';
+import * as axy from 'axios';
 
-Q3. Using ternary operator for conditional rendering, display only those products that are in stock. 
-    Use "inStock" stateful variable to perform conditional rendering.
-- kind of done... used the terniary operator and passed in the state variable as a prop
+import {
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Button,
+  Box,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  FormHelperText,
+  Modal
+} from '@material-ui/core';
 
-Q4. Complete the function "handleDiscountedProducts" that toggles between two modes: "Show discounted products only" 
-    and "Show all products", in response to the user checking/unckecking the checkbox "DiscountCheckBox".
-- DONE
-- Changed discounted items:         event.target.checked ? setText("Show all products") : setText("Show discounted products only")
-- Filtered for discounted items:    changeProduct(products.filter(products => products.discount === true))
+// const serverURL = "http://ov-research-4.uwaterloo.ca:3064";
+const serverURL = ""; //enable for dev mode
 
+const reviewObject = {
+  movie: "",
+  title: "",
+  rating: "",
+  body: ""
+}
 
-*/
+// --------------------------------------------------- /\ Imports
+// --------------------------------------------------- \/ Styles
+// Styling of the form elements
 
-import * as React from 'react';
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Checkbox from '@material-ui/core/Checkbox';
+// Modal styling
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  border: '0px'
+};
 
-const App = () => {
+// --------------------------------------------------- /\ Styles
+// --------------------------------------------------- \/ Main Function
+// Main function: Aggregating components into a user form
 
-  const initialList = [
-    {
-      id: 1,
-      title: 'Gala apple',
-      category: 'fruit',
-      price: 1.20,
-      discount: true,
-      discountAmount: "20%",
-      inStock: true
-    },
-    {
-      id: 2,
-      title: 'Green pepper',
-      category: 'vegetable',
-      price: 2.30,
-      discount: true,
-      discountAmount: "10%",
-      inStock: false
-    },
-    {
-      id: 3,
-      title: 'Whole-wheat tortilla',
-      category: 'bread',
-      price: 3.20,
-      discount: false,
-      discountAmount: "20%",
-      inStock: true
-    },
-    {
-      id: 4,
-      title: 'Sesame bagel',
-      category: 'bread',
-      price: 1.05,
-      discount: true,
-      discountAmount: "10%",
-      inStock: false
-    },
-    {
-      id: 5,
-      title: 'Fruit yoghurt',
-      category: 'dairy',
-      price: 4.30,
-      discount: false,
-      discountAmount: "10%",
-      inStock: true
-    },
-    {
-      id: 6,
-      title: 'Cheddar cheese',
-      category: 'dairy',
-      price: 5.00,
-      discount: true,
-      discountAmount: "10%",
-      inStock: true
-    },
-  ];
+function Review(props) {
 
-  // Q1 - Stateful list
-  const [products, changeProduct] = React.useState(initialList);
-  const [inStock, setStock] = React.useState(true);
+  // States
+  const [movie, selectedMovie] = React.useState();
+  const [title, enteredTitle] = React.useState();
+  const [review, enteredReview] = React.useState();
+  const [rating, selectedRating] = React.useState();
 
-  const handleDiscountedProducts = (checked) => {
-    if (checked) {
-      changeProduct(products.filter(products => products.discount === true))
-    } else {
-      changeProduct(initialList)
+  // D2: Hardcoded userID
+  const [userID, setUser] = React.useState(1);
+
+  // States: Errors
+  const [errorMovie, triggerErrorMovie] = React.useState(false);
+  const [errorTitle, triggerErrorTitle] = React.useState(false);
+  const [errorReview, triggerErrorReview] = React.useState(false);
+  const [errorRating, triggerErrorRating] = React.useState(false);
+
+  // Modal triggers
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  // Form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Validation
+    reviewObject.movie === "" ? triggerErrorMovie(true) : triggerErrorMovie(false)
+    reviewObject.title === "" ? triggerErrorTitle(true) : triggerErrorTitle(false)
+    reviewObject.body === "" ? triggerErrorReview(true) : triggerErrorReview(false)
+    reviewObject.rating === "" ? triggerErrorRating(true) : triggerErrorRating(false)
+
+    // If no errors then output user review
+    if (reviewObject.body !== "" && reviewObject.rating !== "" && reviewObject.movie !== "" && reviewObject.title !== "") {
+      handleOpen(); // Open modal to display review
+
+      // API to send review to database
+      axy.post('http://localhost:3064/api/addReview', {
+        reviewTitle: reviewObject.title,
+        reviewContent: reviewObject.body,
+        reviewScore: reviewObject.rating,
+        userID: userID,
+        movieID: reviewObject.movie
+      })
+
     }
   }
 
   return (
-    <Grid
-      container
-      spacing={1}
-      style={{ maxWidth: '50%', margin: 20 }}
-      direction="column"
-      justify="flex-start"
-      alignItems="stretch"
-    >
-      <Typography variant="h3" gutterBottom component="div">
-        Online Grocery Store
+    <div className="App">
+
+      {/* Main title */}
+      <Typography gutterBottom variant="h3" align="center">
+        Review a movie
       </Typography>
 
-      <DiscountCheckBox
-        onCheck={handleDiscountedProducts}
-      />
+      {/* Form container */}
+      <Card style={{ maxWidth: 450, margin: "0 auto", padding: "20px 5px" }}>
+        <CardContent>
 
-      <List
-        list={products}
-        inStock={inStock}
-      />
+          {/* User form */}
+          <form onSubmit={handleSubmit}>
 
-    </Grid>
+            {/* Grid for organizing form elements */}
+            <Grid container spacing={2}>
+
+              <Grid xs={12} item>
+                <MovieSelection
+                  movie={movie}
+                  onChange={selectedMovie}
+                  error={errorMovie}
+                  helperText={errorMovie ? "Please select a movie" : " "}
+                />
+              </Grid>
+              <Grid xs={12} item>
+                <ReviewTitle
+                  title={title}
+                  onChange={enteredTitle}
+                  error={errorTitle}
+                  helperText={errorTitle ? "Please enter your review title" : " "}
+                />
+              </Grid>
+
+              <Grid xs={12} item align="center">
+                <ReviewRating
+                  rating={rating}
+                  onChange={selectedRating}
+                  error={errorRating}
+                  helperText={errorRating ? 'Please select the rating' : " "}
+                />
+              </Grid>
+
+              <Grid xs={12} item>
+                <ReviewBody
+                  review={review}
+                  onChange={enteredReview}
+                  error={errorReview}
+                  helperText={errorReview ? "Please enter your review" : " "}
+                />
+              </Grid>
+              <Grid xs={12} item>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth>
+                  Share your review
+                </Button>
+              </Grid>
+
+              {/* Modal to display review */}
+              <Modal
+                open={open}
+                onClose={handleClose}
+              >
+                <Box sx={style}>
+                  <Typography id="modal-modal-title" variant="h6" component="h2" style={{ marginBottom: "20px" }}>
+                    {reviewObject.title} ~ {reviewObject.rating}*
+                  </Typography>
+                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    {reviewObject.body}
+                  </Typography>
+                </Box>
+              </Modal>
+
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+
+    </div>
   );
+
 }
 
+export default Review;
 
-const DiscountCheckBox = ({ onCheck }) => {
+// --------------------------------------------------- /\ Main Function
+// --------------------------------------------------- \/ Movie Selection
+// Component: Selecting which movie to review (MUI Select)
 
-  const [helperText, setText] = React.useState("Show discounted products only")
+const MovieSelection = (props) => {
+
+  const [movies, updateMovies] = React.useState();
 
   const handleChange = (event) => {
-    onCheck(event.target.checked);
-    event.target.checked ? setText("Show all products") : setText("Show discounted products only")
+    reviewObject.movie = event.target.value;
+  }
+
+  // Auto-loading movie titles from database
+  useEffect(() => {
+    axy.post("http://localhost:3064/api/getMovies").then((response) => {
+      updateMovies(response.data);
+    });
+  }, []);
+
+  return (
+    <Box>
+      <TextField
+        label="Select movie"
+        select
+        value={props.movie}
+        fullWidth
+        variant="outlined"
+        error={props.error}
+        helperText={props.helperText}
+        onChange={handleChange}
+      >
+
+        <MenuItem value="">
+          <em>Select a movie</em>
+        </MenuItem>
+        {movies
+          ? movies.map((item, index) => (
+            <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
+          ))
+          : null
+        }
+
+      </TextField>
+    </Box>
+  )
+}
+
+// --------------------------------------------------- /\ Movie Selection
+// --------------------------------------------------- \/ Review Title
+// Component: The title of the user's review (MUI TextField)
+
+const ReviewTitle = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.title = event.target.value;
+  }
+
+  return (
+    <TextField
+      label="Title"
+      placeholder="Enter review title"
+      variant="outlined"
+      value={props.title}
+      error={props.error}
+      helperText={props.helperText}
+      fullWidth
+      name={"reviewTitle"}
+      onChange={handleChange}
+    />
+  )
+}
+
+// --------------------------------------------------- /\ Review Title
+// --------------------------------------------------- \/ Review Body
+// Component: The body of the user's review (MUI TextField)
+
+const ReviewBody = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.body = event.target.value;
+  }
+
+  return (
+    <TextField
+      label="Review"
+      inputProps={{ maxLength: 200 }}
+      multiline minRows={4}
+      placeholder="Type your thoughts here (max. 200 char)"
+      variant="outlined"
+      value={props.review}
+      fullWidth
+      error={props.error}
+      helperText={props.helperText}
+      onChange={handleChange}
+    />
+  )
+}
+
+// --------------------------------------------------- /\ Review Body
+// --------------------------------------------------- \/ Review Rating
+// Component: The user's rating (# of stars) (MUI Radio Buttons)
+
+const ReviewRating = (props) => {
+
+  const handleChange = (event) => {
+    reviewObject.rating = event.target.value;
   };
 
   return (
-    <div>
-      {helperText}
-      <Checkbox
+    <FormControl component="fieldset" error={props.error}>
+      <FormLabel component="legend">Rating</FormLabel>
+      <RadioGroup
+        row
+        aria-label="position"
+        name="position"
+        value={props.rating}
         onChange={handleChange}
-      />
-      <hr />
-    </div>
+      >
+        <FormControlLabel
+          value="1"
+          control={<Radio color="primary" />}
+          label="1"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="2"
+          control={<Radio color="primary" />}
+          label="2"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="3"
+          control={<Radio color="primary" />}
+          label="3"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="4"
+          control={<Radio color="primary" />}
+          label="4"
+          labelPlacement="bottom"
+        />
+        <FormControlLabel
+          value="5"
+          control={<Radio color="primary" />}
+          label="5"
+          labelPlacement="bottom"
+        />
+      </RadioGroup>
+      <FormHelperText>{props.helperText}</FormHelperText>
+    </FormControl>
   );
 }
 
-const List = ({ list, inStock }) => {
-  return (
-    <>
-      {list.map((item) => {
-        return (
-          <>
-            <Item
-              item={item}
-              inStock={inStock}
-            />
-          </>
-        );
-      })}
-    </>
-  )
-}
-
-const Item = ({ item, inStock }) => {
-
-  return (
-
-    <>
-      {/* Terniary operator */}
-      {item.inStock && inStock ?
-        <Grid item>
-          <p>
-            <Typography variant="h6" gutterBottom component="div">
-              {item.title}
-            </Typography>
-            <Typography variant="body1" gutterBottom component="div">
-              {"Category: " + item.category}
-            </Typography>
-            <Typography variant="body1" gutterBottom component="div">
-              {"Price: $" + item.price}
-            </Typography>
-            <Typography variant="body1" gutterBottom component="div">
-              {"Discount: " + item.discount}
-            </Typography>
-            <Typography variant="body1" gutterBottom component="div">
-              {"Discount Percentage: " + item.discountAmount}
-            </Typography>
-          </p>
-        </Grid>
-        : 
-        ""
-      }
-    </>
-  )
-}
-
-
-export default App;
+// --------------------------------------------------- /\ Review Rating
