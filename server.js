@@ -8,7 +8,7 @@ const mysql = require('mysql');
 const port = 5000;
 
 const db = mysql.createPool({
-	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
+	host: "localhost",
 	user: "b33luo",
 	password: "Password1",
 	database: "b33luo"
@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // API to send all MySQL movie data to frontend 'Select Movie' element
 app.post('/api/getMovies', (req, res) => {
-	const sqlSelect = "SELECT * FROM movies LIMIT 5";
+	const sqlSelect = "SELECT * FROM movies";
 	db.query(sqlSelect, (err, result) => {
 		res.send(result);
 	});
@@ -43,4 +43,4 @@ app.post('/api/addReview', (req, res) => {
 });
 
 
-app.listen(port, '172.31.31.77');
+app.listen(port);
