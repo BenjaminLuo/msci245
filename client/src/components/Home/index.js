@@ -33,7 +33,8 @@ import {
 } from '@material-ui/core';
 
 // const serverURL = "http://ov-research-4.uwaterloo.ca:3064";
-// const serverURL = ""; //enable for dev mode
+// const serverURL = "http://localhost:3064"; //enable for dev mode
+const url = "ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064";
 
 const reviewObject = {
   movie: "",
@@ -101,7 +102,7 @@ function Review(props) {
       handleOpen(); // Open modal to display review
 
       // API to send review to database
-      axy.post('http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064/api/addReview', {
+      axy.post(url + '/api/addReview', {
         reviewTitle: reviewObject.title,
         reviewContent: reviewObject.body,
         reviewScore: reviewObject.rating,
@@ -215,7 +216,7 @@ const MovieSelection = (props) => {
 
   // Auto-loading movie titles from database
   useEffect(() => {
-    axy.post("http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064/api/getMovies").then((response) => {
+    axy.post(url + "/api/getMovies").then((response) => {
       updateMovies(response.data);
     });
   }, []);

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
-const port = process.env.PORT || 5000;
+const port = process.env.port || 5000;
 
 const db = mysql.createPool({
 	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
