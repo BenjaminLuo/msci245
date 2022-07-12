@@ -42,4 +42,4 @@ app.post('/api/addReview', (req, res) => {
 });
 
 
-app.listen(port, '172.31.31.77');
+app.listen(port);
