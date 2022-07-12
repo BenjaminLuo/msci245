@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
+const path = require("path");
 const port = process.env.PORT || 5000;
 
 const db = mysql.createPool({
@@ -15,8 +16,9 @@ const db = mysql.createPool({
 });
 
 app.use(cors());
-app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "client/build")));
+
 
 // API to send all MySQL movie data to frontend 'Select Movie' element
 app.post('/api/getMovies', (req, res) => {
