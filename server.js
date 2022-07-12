@@ -7,8 +7,7 @@ const app = express();
 const mysql = require('mysql');
 
 const db = mysql.createPool({
-	// host: "ov-research-4.uwaterloo.ca",
-	host: "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com",
+	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
 	user: "b33luo",
 	password: "Password1",
 	database: "b33luo"
