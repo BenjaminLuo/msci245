@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
-const port = 80 || 5000;
+const port = process.env.PORT || 5000;
 
 const db = mysql.createPool({
 	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
@@ -17,14 +17,6 @@ const db = mysql.createPool({
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-var path = require('path');
-var dir = '/media/data/msci245/b33luo/node-react-app';
-
-app.get('/', function(req, res) {
-    res.sendFile(path.join(dir + '/client/src/components/Home/index.js'));
-});
 
 // API to send all MySQL movie data to frontend 'Select Movie' element
 app.post('/api/getMovies', (req, res) => {
