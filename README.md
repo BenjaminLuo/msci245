@@ -246,14 +246,14 @@ CREATE TABLE Review (
 
 1. Access the user form via `yarn dev`. Forward `Port 5000` in VSCode if it's not automatically forwarded. Submit to see form validation
 
-<center><img src="documentation/images/0_dropdown.png" alt="dropdown" width="300"/></center>
+<p align="center"><img src="documentation/images/0_dropdown.png" alt="dropdown" width="300"/></p>
 
-<center><img src="documentation/images/1_validation.png" alt="dropdown" width="300"/></center>
+<p align="center"><img src="documentation/images/1_validation.png" alt="dropdown" width="300"/></p>
 
 2. Complete the form and press submit to open the modal and send review to MySQL database
 
-<center><img src="documentation/images/2_submission.png" alt="dropdown" width="300"/></center>
+<p align="center"><img src="documentation/images/2_submission.png" alt="dropdown" width="300"/></p>
 
 3. View the entry in MySQL
 
-<center><img src="documentation/images/3_database.png" alt="dropdown" width="300"/></center>
+<p align="center"><img src="documentation/images/3_database.png" alt="dropdown" width="300"/></p>
