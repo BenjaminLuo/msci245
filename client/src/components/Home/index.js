@@ -34,7 +34,7 @@ import {
 
 // const serverURL = "http://ov-research-4.uwaterloo.ca:3064";
 // const serverURL = "http://localhost:3064"; //enable for dev mode
-const url = "ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064";
+const url = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064";
 
 const reviewObject = {
   movie: "",
