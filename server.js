@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // API to send all MySQL movie data to frontend 'Select Movie' element
-app.post('/api/getMovies', (req, res) => {
+app.get('/api/getMovies', (req, res) => {
 	const sqlSelect = "SELECT * FROM movies";
 	db.query(sqlSelect, (err, result) => {
 		res.send(result);
@@ -31,7 +31,7 @@ app.post('/api/getMovies', (req, res) => {
 
 
 // API to post user reviews to database
-app.post('/api/addReview', (req, res) => {
+app.get('/api/addReview', (req, res) => {
 	const reviewTitle = req.body.reviewTitle;
 	const reviewContent = req.body.reviewContent;
 	const reviewScore = req.body.reviewScore;
