@@ -7,8 +7,6 @@ const app = express();
 const mysql = require('mysql');
 const port = process.env.PORT || 5000;
 
-console.log(port);
-
 const db = mysql.createPool({
 	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
 	user: "b33luo",
@@ -22,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // API to send all MySQL movie data to frontend 'Select Movie' element
-app.get('/api/getMovies', (req, res) => {
+app.post('/api/getMovies', (req, res) => {
 	const sqlSelect = "SELECT * FROM movies";
 	db.query(sqlSelect, (err, result) => {
 		res.send(result);
@@ -31,7 +29,7 @@ app.get('/api/getMovies', (req, res) => {
 
 
 // API to post user reviews to database
-app.get('/api/addReview', (req, res) => {
+app.post('/api/addReview', (req, res) => {
 	const reviewTitle = req.body.reviewTitle;
 	const reviewContent = req.body.reviewContent;
 	const reviewScore = req.body.reviewScore;
