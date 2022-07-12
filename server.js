@@ -8,7 +8,7 @@ const mysql = require('mysql');
 
 const db = mysql.createPool({
 	// host: "ov-research-4.uwaterloo.ca",
-	host: "localhost",
+	host: "http://ec2-18-188-101-79.us-east-2.compute.amazonaws.com",
 	user: "b33luo",
 	password: "Password1",
 	database: "b33luo"
@@ -43,6 +43,6 @@ app.post('/api/addReview', (req, res) => {
 });
 
 
-app.listen(3064, () => {
+app.listen(3064, '172.31.31.77', () => {
 	console.log('running on port 3064')
 })
