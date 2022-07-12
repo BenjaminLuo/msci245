@@ -8,7 +8,7 @@ const mysql = require('mysql');
 const port = process.env.port || 5000;
 
 const db = mysql.createPool({
-	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
+	host: "localhost",
 	user: "b33luo",
 	password: "Password1",
 	database: "b33luo"
@@ -43,4 +43,4 @@ app.post('/api/addReview', (req, res) => {
 });
 
 
-app.listen(port, '172.31.31.77');
+app.listen(port);
