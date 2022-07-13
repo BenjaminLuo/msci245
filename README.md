@@ -1,6 +1,6 @@
 # D2 Implementation
 
-> **Note**: I unsure if I'll be able to publish the code to the server so I'm leaving this README to explain the code. Use the dropdowns to view the step-by-step implementation process
+> **Note**: I'm leaving this README to explain the code. Use the dropdowns to view the step-by-step implementation process
 
 
 <details> 

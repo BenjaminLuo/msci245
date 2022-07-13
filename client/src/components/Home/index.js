@@ -109,6 +109,8 @@ function Review(props) {
         movieID: reviewObject.movie
       })
 
+      console.log(reviewObject);
+
     }
   }
 
