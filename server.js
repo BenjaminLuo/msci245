@@ -16,7 +16,7 @@ const db = mysql.createPool({
 });
 
 app.use(cors());
-app.use(express.static(path.join(__dirname, "client/build")));
+app.use(express.json(path.join(__dirname, "client/build")));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // API to send all MySQL movie data to frontend 'Select Movie' element
