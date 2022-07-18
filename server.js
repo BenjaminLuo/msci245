@@ -6,10 +6,12 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 const mysql = require('mysql');
-const port = process.env.PORT || 5000;
+// const port = process.env.PORT || 5000;
+const port = 5000;
 
 const db = mysql.createPool({
-	host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
+	// host: "ec2-18-216-101-119.us-east-2.compute.amazonaws.com",
+	host: "localhost",
 	user: "b33luo",
 	password: "Password1",
 	database: "b33luo"
@@ -46,4 +48,5 @@ app.post('/api/addReview', (req, res) => {
 });
 
 
-app.listen(port, '172.31.31.77');
+// app.listen(port, '172.31.31.77');
+app.listen(port);

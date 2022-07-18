@@ -32,8 +32,8 @@ import {
   Modal
 } from '@material-ui/core';
 
-// const url = "http://localhost:5000"; //enable for dev mode
-const url = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064";
+const url = "http://localhost:5000"; //enable for dev mode
+// const url = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064";
 
 const reviewObject = {
   movie: "",
