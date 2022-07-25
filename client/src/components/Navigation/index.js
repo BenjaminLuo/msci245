@@ -1,39 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import * as React from 'react';
+import { NavLink } from 'react-router-dom';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  MenuIcon,
+  makeStyles,
+  Grid
+} from '@material-ui/core';
 
-import SignOutButton from '../SignOut';
-import * as ROUTES from '../../constants/routes';
+import backgroundImage from '../../images/nav_background.png';
 
-const Navigation = ({ authUser }) => (
-  <div>{authUser ? <NavigationAuth /> : <NavigationNonAuth />}</div>
-);
 
-const NavigationAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.HOME}>Home</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
-    </li>
-    <li>
-      <SignOutButton />
-    </li>
-  </ul>
-);
+// Styling
+const useStyles = makeStyles((theme) => {
+  return {
+    page: {
+      paddingBottom: '64px'
+    },
+    appbar: {
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover'
+    },
+    toolbar: theme.mixins.toolbar,
+    grid: {
+    }
+  }
+})
 
-const NavigationNonAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-    </li>
-  </ul>
-);
 
-export default Navigation;
+// Navigation Bar (appears on all pages)
+export default function NavBar() {
+  const classes = useStyles()
+
+  return (
+    <div className={classes.page}>
+      <AppBar className={classes.appbar}>
+        <Toolbar className={classes.toolbar}>
+
+          {/* Grid to organize redirects */}
+          <Grid container spacing={2} className={classes.grid}>
+            <NavButton size={1} redirect={"/"} linkText={"Home"} />
+            <Grid xs={8} item></Grid>
+            <NavButton size={1} redirect={"/search"} linkText={"Search"} />
+            <NavButton size={1} redirect={"/reviews"} linkText={"Reviews"} />
+            <NavButton size={1} redirect={"/myPage"} linkText={"News"} />
+          </Grid>
+
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+}
+
+
+const NavButton = (props) => {
+  return (
+    <Grid xs={props.size} item>
+      <NavLink to={props.redirect} style={{ color: 'inherit', textDecoration: 'none' }}>
+        <Typography color="inherit" noWrap>
+          {props.linkText}
+        </Typography>
+      </NavLink>
+    </Grid>
+  )
+}

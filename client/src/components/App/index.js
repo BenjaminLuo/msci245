@@ -1,43 +1,58 @@
 import React, { Component } from 'react';
+import { createTheme, ThemeProvider } from '@material-ui/core'
 import {
   BrowserRouter as Router,
-  Route,
-  Link,
-} from 'react-router-dom';
+  Route
+} from "react-router-dom";
 
-import Home from '../Home';
-import PrivateRoute from '../Navigation/PrivateRoute.js';
+import Navigation from '../Navigation';
+import Landing from '../Landing';
+import Search from '../Search';
+import Reviews from '../Reviews';
+import MyPage from '../MyPage';
 
 
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      //
-    };
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1c1c1c',
+      light: '#acaea9',
+      dark: '#acaea9'
+    },
+    secondary: {
+      main: '#dedfdd',
+      light: '#dedfdd',
+      dark: '#dedfdd'
+    }
+  },
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(',')
   }
-
-  componentDidMount() {
-    //
-  }
+})
 
 
-  componentWillUnmount() {
-    this.listener();
-  }
+export default function App() {
 
-
-  render() {
-    return (
-	  <Router>
-	    <div>
-        <PrivateRoute exact path="/" component={Home}/>
-	    </div>
-	  </Router>
-    );
-  }
+  return (
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Navigation />
+        <Route exact path="/" component={Landing} />
+        <Route path="/search" component={Search} />
+        <Route path="/reviews" component={Reviews} />
+        <Route path="/myPage" component={MyPage} />
+      </Router>
+    </ThemeProvider>
+  );
 }
-
-export default App;

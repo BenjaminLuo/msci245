@@ -48,5 +48,60 @@ app.post('/api/addReview', (req, res) => {
 });
 
 
+// API to search for movies based on given search terms
+app.post('/api/searchMovies', (req, res) => {
+	const movieTitle = req.body.movieTitle;
+	const actorName = req.body.actorName;
+	const directorName = req.body.directorName;
+	console.log(req.body)
+
+	var movieID = [];
+
+	var sqlMovieSearch = `
+		SELECT DISTINCT m.name as movie, CONCAT(d.first_name, ' ', d.last_name) as director, m.id
+		FROM movies m, directors d, movies_directors md ` + (actorName === '' ? '' : `, actors a, roles r `) + `
+		WHERE md.director_id=d.id 
+		AND m.id=md.movie_id ` +
+		(actorName === '' ? '' : `AND m.id=r.movie_id AND r.actor_id=a.id AND CONCAT(a.first_name, ' ', a.last_name) ='` + actorName + `' `) +
+		(movieTitle === '' ? '' : `AND m.name='` + movieTitle + `' `) +
+		(directorName === '' ? '' : `AND CONCAT(d.first_name, ' ', d.last_name)='` + directorName + `'`) + `;`
+
+	db.query(sqlMovieSearch, (err, result) => {
+
+		for (var i = 0; i < result.length; i++) {
+			movieID.push(result[i]['id']);
+		}
+
+		const movieData = result;
+
+		var sqlReviewSearch = `
+			SELECT reviewTitle, reviewContent, reviewScore, movieID
+			FROM Review
+			WHERE movieID IN (` + movieID.join(',') + `);`
+
+		db.query(sqlReviewSearch, (err, result) => {
+			const reviewData = result
+
+			var sqlAvgScores = `
+				SELECT AVG(reviewScore) as avg, movieID as id
+				FROM Review 
+				WHERE movieID IN (` + movieID.join(',') + `) 
+				GROUP BY movieID;`
+
+			db.query(sqlAvgScores, (err, result) => {
+				const avgScores = result;
+				res.send({ movieData, reviewData, avgScores });
+				console.log(reviewData);
+			});
+
+
+		});
+
+
+	});
+
+});
+
+
 // app.listen(port, '172.31.31.77');
 app.listen(port);
