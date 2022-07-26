@@ -1,7 +1,6 @@
 import React from 'react';
 import * as axy from 'axios';
 import backgroundImage from '../../images/light_background.png';
-import backgroundImage_card from '../../images/banner_background.png';
 import './index.css';
 
 import {
@@ -53,25 +52,14 @@ const useStyles = makeStyles((theme) => {
       backgroundSize: 'cover',
       marginBottom: '20px'
     },
-    modal: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      maxHeight: '80%',
-      width: 400,
-      maxHeight: '80%',
-      bgcolor: 'background.paper',
-      background: 'rgba(0, 0, 0, 0.5)',
-      boxShadow: 24,
-      p: 4,
-      padding: '20px',
-      overflow: 'auto'
-    },
     modalCard: {
       marginBottom: '20px',
       background: 'lightgrey',
-      marginRight: '20px'
+      width: '100%'
+    },
+    accordion: {
+      background: 'black',
+      color: 'white'
     }
   }
 })
@@ -80,7 +68,7 @@ const url = "http://localhost:5000"; //enable for dev mode
 // const url = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3064";
 
 export default function App() {
-  const classes = useStyles()
+  const classes = useStyles();
 
   // Filter options
   const [movieTitle, changeMovieTitle] = React.useState('');
@@ -89,11 +77,6 @@ export default function App() {
 
   // Query results
   const [movies, updateMovies] = React.useState('');
-
-  // Modal triggers
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   // API to get query results
   const handleSubmit = (event) => {
@@ -184,7 +167,7 @@ export default function App() {
                     <Card className={classes.card}>
                       <CardContent>
                         <Grid container>
-                          <Grid xs={8} item>
+                          <Grid xs={4} item>
                             <Typography variant='h5' className={classes.typography} style={{ fontWeight: 'bold' }}>
                               {item.movie} {!(movies.avgScores.map(function (d) { return d['id']; }).includes(item.id)) ? '' : ' - ' + movies.avgScores[index]['avg']}
                             </Typography>
@@ -196,53 +179,39 @@ export default function App() {
                           {/* Only show reviews if they exist */}
                           {!(movies.avgScores.map(function (d) { return d['id']; }).includes(item.id)) ? '' :
 
-                            <>
-
-                              <Grid xs={4} item>
-                                <Button
-                                  type="submit"
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={handleOpen}
-                                  style={{ marginTop: '20px', marginLeft: '20px', width: '80%' }}>
-                                  See Reviews
-                                </Button>
-                              </Grid>
-
-                              <Accordion>
+                            <Grid xs={8} item>
+                              <Accordion className={classes.accordion}>
                                 <AccordionSummary
-                                  aria-controls="panel1a-content"
-                                  id="panel1a-header"
                                   style={{ marginTop: '20px' }}
                                 >
                                   <Typography>See Reviews</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                  <Box className>
-                                    <Grid container>
-                                      {movies.reviewData.map((reviewItem, index) => (
-                                        reviewItem.movieID === item.id ?
-                                          <Grid xs={6} item>
-                                            <Card className={classes.modalCard}>
-                                              <CardContent>
-                                                <Typography variant='h6' style={{ marginBottom: '10px' }}>
-                                                  {reviewItem.reviewTitle} - {reviewItem.reviewScore}
-                                                </Typography>
-                                                <Typography sx={{ mt: 2 }}>
-                                                  {reviewItem.reviewContent}
-                                                </Typography>
-                                              </CardContent>
-                                            </Card>
-                                          </Grid>
-                                          :
-                                          ''
-                                      ))}
-                                    </Grid>
-                                  </Box>
+                                  <Grid container>
+
+                                    {movies.reviewData.map((reviewItem, index) => (
+                                      reviewItem.movieID === item.id ?
+
+                                        <Grid xs={12} item>
+                                          <Card className={classes.modalCard}>
+                                            <CardContent>
+                                              <Typography variant='h6' style={{ marginBottom: '10px' }}>
+                                                {reviewItem.reviewTitle} - {reviewItem.reviewScore}
+                                              </Typography>
+                                              <Typography sx={{ mt: 2 }}>
+                                                {reviewItem.reviewContent}
+                                              </Typography>
+                                            </CardContent>
+                                          </Card>
+                                        </Grid>
+
+                                        :
+                                        ''
+                                    ))}
+                                  </Grid>
                                 </AccordionDetails>
                               </Accordion>
-
-                            </>
+                            </Grid>
                           }
 
                         </Grid>
@@ -254,30 +223,6 @@ export default function App() {
             </Card>
           </Grid>
         </Grid>
-
-        <Modal
-          open={open}
-          onClose={handleClose}
-        >
-
-          {movies === '' ? '' :
-            <Box className={classes.modal}>
-              {movies.reviewData.map((reviewItem, index) => (
-                <Card className={classes.modalCard}>
-                  <CardContent>
-                    <Typography variant='h6' style={{ marginBottom: '10px' }}>
-                      {reviewItem.reviewTitle} - {reviewItem.reviewScore}
-                    </Typography>
-                    <Typography sx={{ mt: 2 }}>
-                      {reviewItem.reviewContent}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ))}
-            </Box>
-          }
-
-        </Modal>
 
       </Container>
     </div>

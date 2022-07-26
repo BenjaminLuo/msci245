@@ -13,9 +13,11 @@
 
 import React, { useEffect } from 'react';
 import * as axy from 'axios';
+import backgroundImage from '../../images/light_background.png';
 
 import {
   Typography,
+  Container,
   Card,
   CardContent,
   Grid,
@@ -29,6 +31,7 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  makeStyles,
   Modal
 } from '@material-ui/core';
 
@@ -60,11 +63,27 @@ const style = {
   border: '0px'
 };
 
+const useStyles = makeStyles((theme) => {
+  return {
+    page: {
+      background: 'lightgrey',
+      height: 'calc(100vh - 64px)',
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      opacity: 0.9,
+      padding: '40px',
+      height: '100%'
+    },
+  }
+})
+
+
 // --------------------------------------------------- /\ Styles
 // --------------------------------------------------- \/ Main Function
 // Main function: Aggregating components into a user form
 
 function Review(props) {
+  const classes = useStyles();
 
   // States
   const [movie, selectedMovie] = React.useState();
@@ -115,7 +134,7 @@ function Review(props) {
   }
 
   return (
-    <div className="App">
+    <Container maxWidth={false} className={classes.page}>
 
       {/* Main title */}
       <Typography gutterBottom variant="h3" align="center">
@@ -196,7 +215,7 @@ function Review(props) {
         </CardContent>
       </Card>
 
-    </div>
+    </Container>
   );
 
 }
