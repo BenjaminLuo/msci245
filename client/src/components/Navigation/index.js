@@ -47,7 +47,7 @@ export default function NavBar() {
             <Grid xs={8} item></Grid>
             <NavButton size={1} redirect={"/search"} linkText={"Search"} />
             <NavButton size={1} redirect={"/reviews"} linkText={"Reviews"} />
-            <NavButton size={1} redirect={"/myPage"} linkText={"News"} />
+            <NavButton size={1} redirect={"/myPage"} linkText={"Forum"} />
           </Grid>
 
         </Toolbar>

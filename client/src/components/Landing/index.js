@@ -60,7 +60,7 @@ export default function App() {
 
           <NavButton size={9} content={'Movie Catalogue'} height={'40vh'} id={'search'} img={`url(${search})`}/>
           <NavButton size={3} content={'Review Movies'} height={'40vh'} id={'reviews'} img={`url(${reviews})`}/>
-          <NavButton size={12} content={'Latest News'} height={'25vh'} id={'myPage'} img={`url(${myPage})`}/>
+          <NavButton size={12} content={'Forum'} height={'25vh'} id={'myPage'} img={`url(${myPage})`}/>
 
         </Grid>
       </Container>

@@ -30,6 +30,13 @@ app.post('/api/getMovies', (req, res) => {
 	});
 });
 
+// API to get all MySQL message data to frontend Forum page
+app.post('/api/getMessages', (req, res) => {
+	const sqlSelect = "SELECT * FROM ForumMessages";
+	db.query(sqlSelect, (err, result) => {
+		res.send(result);
+	});
+});
 
 // API to post user reviews to database
 app.post('/api/addReview', (req, res) => {
@@ -46,6 +53,24 @@ app.post('/api/addReview', (req, res) => {
 		console.log(err);
 	});
 });
+
+
+// API to post user reviews to database
+app.post('/api/addMessage', (req, res) => {
+	const userID = req.body.userID;
+	const title = req.body.title;
+	const body = req.body.body;
+
+	console.log(req.body);
+
+	const sqlInsert = "INSERT INTO ForumMessages(userID, title, content) VALUES (?,?,?)";
+	db.query(sqlInsert, [userID, title, body], (err, result) => {
+		console.log(err);
+	});
+
+	res.send('');
+});
+
 
 
 // API to search for movies based on given search terms

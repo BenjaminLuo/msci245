@@ -140,6 +140,7 @@ function Review(props) {
       <Typography gutterBottom variant="h3" align="center">
         Review a movie
       </Typography>
+      <hr style={{align: 'center', width: '20%', marginBottom: '20px', borderColor: 'black'}}/>
 
       {/* Form container */}
       <Card style={{ maxWidth: 450, margin: "0 auto", padding: "20px 5px" }}>
